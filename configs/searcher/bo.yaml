@@ -1,0 +1,14 @@
+_target_: src.searcher.bo.BOqLogEISearcher
+num_solutions: 128
+
+noise_se: 0.1
+gp_samples: 500
+batch_size: 10
+num_restarts: 10
+raw_samples: 128
+batch_limit: 5
+maxiter: 200
+iterations: 100
+mc_samples: 128
+
+MAXIMIZE: true

@@ -1,0 +1,33 @@
+_target_: src.models.t5_finetuner.T5FineTuner
+
+model_name: google-t5/t5-small
+non_shuffled_datamodule:
+  _target_: src.data.string_input_datamodule.NonShuffledStringXYDataModule
+  task_names: AntMorphology-Exact-v0,Superconductor-RandomForest-v0,DKittyMorphology-Exact-v0,TFBind8-Exact-v0,TFBind10-Exact-v0,gtopx_data_2_1,gtopx_data_3_1,gtopx_data_4_1,gtopx_data_6_1
+  val_ratio: 0.2 
+  batch_size: 128
+  num_workers: 64
+  persistent_workers: true
+  pin_memory: false
+
+  data_dir: data/
+
+  tokenizer:
+    _target_: transformers.T5Tokenizer.from_pretrained
+    pretrained_model_name_or_path: google-t5/t5-small
+
+  tokenizer_max_length: 324
+
+  cat_metadata: true 
+
+embedder_output_dim: 512
+compile: true 
+
+metadata_embedder:
+  _target_: transformers.T5EncoderModel.from_pretrained
+  pretrained_model_name_or_path: google-t5/t5-small
+
+metadata_embedder_output_dim: 512
+
+learning_rate: 0.00002
+temperature: 0.07 

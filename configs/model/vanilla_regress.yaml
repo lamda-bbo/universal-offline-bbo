@@ -1,0 +1,21 @@
+_target_: src.models.vanilla_regressor_module.RegressorModule
+
+model:
+  _target_: src.models.components.mlp.SimpleMLP
+  _partial_: true
+  hidden_dim: [2048, 2048]
+  output_dim: 1
+
+optimizer:
+  _target_: torch.optim.Adam
+  _partial_: true
+  lr: 0.0003
+  weight_decay: 0.00001
+
+scheduler: 
+  _target_: torch.optim.lr_scheduler.CosineAnnealingLR
+  _partial_: true
+  eta_min: 0
+  T_max: ${trainer.max_epochs}
+
+compile: true

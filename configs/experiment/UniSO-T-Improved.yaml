@@ -1,0 +1,45 @@
+# @package _global_
+
+# to execute this experiment run:
+# python train.py experiment=example
+
+defaults:
+  - override /data: omnipred
+  - override /model: UniSO-T-Improved
+  - override /callbacks: default
+  - override /trainer: default
+  - override /logger: wandb
+  - override /task: design_bench
+  - override /searcher: ga
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+tags: ["universal", "omnipred", "test"]
+
+seed: 42
+
+data:
+  task_names: AntMorphology-Exact-v0,DKittyMorphology-Exact-v0,Superconductor-RandomForest-v0,TFBind8-Exact-v0,TFBind10-Exact-v0,gtopx_data_2_1,gtopx_data_3_1,gtopx_data_4_1,gtopx_data_6_1
+  # task_names: Superconductor-RandomForest-v0
+  batch_size: 128
+  max_length: 324
+
+trainer:
+  min_epochs: 2
+  max_epochs: 2
+  strategy: ddp_find_unused_parameters_true
+  
+
+task:
+  task_name: Superconductor-RandomForest-v0
+
+task_name: UniSO-T-improved
+
+logger:
+  wandb:
+    tags: ${tags}
+    project: "Universal"
+    group: ${task_name}
+    job_type: "train"
+

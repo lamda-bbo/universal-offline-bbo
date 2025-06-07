@@ -1,0 +1,53 @@
+# @package _global_
+
+# to execute this experiment run:
+# python train.py experiment=example
+
+defaults:
+  - override /data: string_xy
+  - override /model: t5_finetuner
+  - override /callbacks: default
+  - override /trainer: default
+  - override /logger: wandb
+  - override /task: design_bench
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+tags: ["universal", "pre-UniSO-N", "multi_task"]
+
+seed: 42
+
+data:
+  task_names: AntMorphology-Exact-v0,Superconductor-RandomForest-v0,DKittyMorphology-Exact-v0,TFBind8-Exact-v0,TFBind10-Exact-v0,gtopx_data_2_1,gtopx_data_3_1,gtopx_data_4_1,gtopx_data_6_1
+  batch_size: 128
+  cat_metadata: true
+
+  tokenizer:
+    _target_: transformers.T5Tokenizer.from_pretrained
+    pretrained_model_name_or_path: google-t5/t5-small
+
+  tokenizer_max_length: 324
+
+trainer:
+  min_epochs: 2
+  max_epochs: 20
+  strategy: ddp_find_unused_parameters_true
+  
+task:
+  task_name: Superconductor-RandomForest-v0
+
+task_name: finetune_t5
+
+logger:
+  wandb:
+    tags: ${tags}
+    project: "Universal"
+    group: ${task_name}
+    job_type: "train"
+
+callbacks:
+  model_checkpoint: 
+    every_n_epochs: 1
+    save_top_k: 20
+    monitor: val/con_loss

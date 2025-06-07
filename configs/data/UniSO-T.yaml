@@ -1,0 +1,18 @@
+_target_: src.data.omnipred_datamodule.OmnipredDataModule
+task_names: Superconductor-RandomForest-v0 
+
+input_tokenizer:
+  _target_: transformers.T5Tokenizer.from_pretrained
+  pretrained_model_name_or_path: google-t5/t5-small
+output_tokenizer:
+  _target_: src.data.components.tokenizer.P10Tokenizer
+max_length: 324
+concat_metadata: true
+
+val_ratio: 0.2
+batch_size: 128
+num_workers: 64
+persistent_workers: true
+pin_memory: false 
+
+data_dir: data/

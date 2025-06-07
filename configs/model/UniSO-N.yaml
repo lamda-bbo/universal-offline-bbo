@@ -1,0 +1,19 @@
+_target_: src.models.UniSO-N.EmbedRegressorModule
+
+embedder:
+  _target_: transformers.T5EncoderModel.from_pretrained
+  pretrained_model_name_or_path: google-t5/t5-small
+
+embedder_output_dim: 512
+
+regressor:
+  _target_: src.models.components.mlp.SimpleMLP
+  input_dim: ${model.embedder_output_dim}
+  hidden_dim: [2048, 2048]
+  output_dim: 1
+
+learning_rate: 3e-4
+weight_decay: 1e-5
+
+data_dir: ${data.data_dir}
+task_names: ${data.task_names}

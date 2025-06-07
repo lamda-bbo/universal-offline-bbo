@@ -1,0 +1,69 @@
+_target_: src.models.UniSO-T-improved.OmniPredModule
+
+encoder_model:
+  _target_: transformers.T5EncoderModel
+  config:
+    _target_: transformers.T5Config
+    vocab_size: 32128
+    num_layers: 6
+    d_kv: 32
+    d_model: 384
+    d_ff: 512
+
+decoder_model:
+  _target_: transformers.models.t5.modeling_t5.T5Stack
+  _partial_: true
+  config:
+    _target_: transformers.T5Config
+    # vocab_size: 32128
+    num_layers: 6
+    d_kv: 32
+    # d_model:
+    d_ff: 512
+    is_decoder: true  
+    use_cache: true  
+
+input_tokenizer: ${data.input_tokenizer}
+output_tokenizer: ${data.output_tokenizer}
+
+optimizer:
+  _target_: torch.optim.AdamW
+  _partial_: true
+  lr: 1e-4
+  weight_decay: 0.01
+  betas: [0.9, 0.999]
+  eps: 1e-8
+
+scheduler:
+  _target_: transformers.get_scheduler
+  _partial_: true
+  name: "cosine"
+  num_warmup_steps: 1000
+  num_training_steps: ${trainer.max_epochs} 
+
+non_shuffled_datamodule:
+  _target_: src.data.omnipred_datamodule.NonShuffledOmnipredDataModule
+  task_names: AntMorphology-Exact-v0,Superconductor-RandomForest-v0,DKittyMorphology-Exact-v0,TFBind8-Exact-v0,TFBind10-Exact-v0,gtopx_data_2_1,gtopx_data_3_1,gtopx_data_4_1,gtopx_data_6_1
+  val_ratio: 0.2 
+  batch_size: 128
+  num_workers: 64
+  persistent_workers: true
+  pin_memory: false
+
+  data_dir: data/
+
+  input_tokenizer:
+    _target_: transformers.T5Tokenizer.from_pretrained
+    pretrained_model_name_or_path: google-t5/t5-small
+    cache_dir: ./
+  output_tokenizer:
+    _target_: src.data.components.tokenizer.P10Tokenizer
+  max_length: 324
+
+metadata_embedder:
+  _target_: transformers.T5EncoderModel.from_pretrained
+  pretrained_model_name_or_path: google-t5/t5-small
+  cache_dir: ./
+metadata_embedder_output_dim: 512
+
+compile: true

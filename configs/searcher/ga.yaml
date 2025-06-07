@@ -1,0 +1,6 @@
+_target_: src.searcher.ga.GASearcher
+pop_size: 128
+num_solutions: 128
+n_gen: 200
+
+MAXIMIZE: true
