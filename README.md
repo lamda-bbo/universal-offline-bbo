@@ -96,7 +96,7 @@ then, you can run by
 # After specified the finetuned T5 ``.pt`` path,
 PT_PATH=
 python src/train_UniSO-N.py \
-    experiment=finetune_t5 \
+    experiment=UniSO-N \
     ++trainer.max_epochs=200 \
     ++pt_path=$PT_PATH
 ```
@@ -104,3 +104,14 @@ python src/train_UniSO-N.py \
 ## Code Reference
 + For benchmark, we use [Design-Bench](https://github.com/brandontrabucco/design-bench) and [SOO-Bench](https://anonymous.4open.science/r/SOO-Bench-9025).
 + For language model, we use [Google T5](https://huggingface.co/docs/transformers/model_doc/t5).
+
+## Citation
+```bib
+@inproceedings{tan2025towards,
+  title={Towards Universal Offline Black-Box Optimization via Learning Language Model Embeddings},
+  author={Tan, Rong-Xi and Chen, Ming and Xue, Ke and Wang, Yao and Wang, Yaoyuan and Fu, Sheng and Qian, Chao},
+  booktitle={Proceedings of the 42nd International Conference on Machine Learning (ICML)},
+  address={Vancouver, Canada},
+  year={2025},
+}
+```
